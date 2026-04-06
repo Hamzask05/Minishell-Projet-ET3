@@ -92,19 +92,23 @@ Nous avons créé une structure de données `job_t` pour maintenir une liste cha
 
 ---
 
-## 🎁 Bonus
+## Bonus
 
 Nous avons implémenté plusieurs fonctionnalités bonus pour enrichir l'expérience :
 
 - **Splash screen** animé avec codes ANSI + `usleep()`
-- **Animation Matrix** avec caractères aléatoires et couleurs
 - **Builtin `oasisPops`** : ouvre le portail Polytech via `system("open ...")`
 
-> 📸 **Splash screen**  
-> ![Bonus Splash](screenshots/bonus_splash.png)
+> **Splash screen**  
+> <img width="918" height="324" alt="image" src="https://github.com/user-attachments/assets/009dc1ca-0054-4c9e-8fda-840a6980e9f3" />
+> <img width="671" height="52" alt="image" src="https://github.com/user-attachments/assets/147c5801-ab96-4074-a741-8fe7e586ae8c" />
 
-> 📸 **Matrix**  
-> ![Bonus Matrix](screenshots/bonus_matrix.png)
+
+>  **Raccourci Oasis Polytech**  
+> <img width="309" height="168" alt="image" src="https://github.com/user-attachments/assets/b63a796d-68f5-4d38-a99d-654ef73b40ba" />
+> <img width="1512" height="961" alt="image" src="https://github.com/user-attachments/assets/38579a78-dc7b-4ecf-ba89-7dd653f21ae1" />
+
+
 
 ---
 
