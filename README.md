@@ -106,6 +106,7 @@ Nous avons implémenté plusieurs fonctionnalités bonus pour enrichir l'expéri
 
 >  **Raccourci Oasis Polytech**  
 > <img width="309" height="168" alt="image" src="https://github.com/user-attachments/assets/b63a796d-68f5-4d38-a99d-654ef73b40ba" />
+Après la commande oasisPops, Oasis s'ouvre sur le navigateur par défaut automatiquement
 > <img width="1512" height="961" alt="image" src="https://github.com/user-attachments/assets/38579a78-dc7b-4ecf-ba89-7dd653f21ae1" />
 
 
