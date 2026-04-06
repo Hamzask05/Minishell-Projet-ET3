@@ -20,12 +20,8 @@ gcc -Wall -o minishell v2.c
 
 ## Partie 1 — Boucle REPL
 
-**✅ Implémenté :**
-Nous avons développé la boucle principale avec :
-- `fgets()` pour lire les commandes utilisateur
-- `printf()` + `fflush()` pour l'affichage du prompt `minishell> `
-- `strcspn()` pour supprimer le `\n` final
-- Gestion des builtins `exit` et `echo` via `strcmp()`
+Nous avons développé la boucle principale de notre shell en utilisant la fonction `fgets()` pour lire les commandes utilisateur, `printf()` combiné à `fflush()` pour afficher proprement le prompt `minishell>`, et `strcspn()` pour supprimer le caractère de fin de ligne `\n`. Les commandes internes `exit` et `echo` sont traitées directement dans la boucle principale grâce à `strcmp()`.
+
 
 **Tests :**
 ![Test Partie 1](https://github.com/user-attachments/assets/e59324f2-9d69-4593-98e8-20ddc60a03ec)
@@ -34,9 +30,8 @@ Nous avons développé la boucle principale avec :
 
 ## Partie 2 — Exécution de commandes
 
-**✅ Implémenté :**
-- Exécution des commandes externes avec `fork()`, `execvp()` et `waitpid()`
-- Builtin `cd` sans fork via `chdir()` (modifie le répertoire du shell parent)
+Nous avons mis en place l'exécution des commandes externes en utilisant le schéma classique `fork()`, `execvp()` et `waitpid()`. La commande interne `cd` est traitée de manière spéciale sans création de processus fils, directement via `chdir()`, car elle doit modifier le répertoire de travail du shell parent lui-même.
+
 
 **Tests :**
 **2.a - Commandes externes :**
@@ -49,10 +44,7 @@ Nous avons développé la boucle principale avec :
 
 ## Partie 3 — Redirections & Pipes
 
-**✅ Implémenté :**
-- Détection des tokens `>`, `>>`, `<` dans `parse_line()`
-- Application des redirections avec `open()` + `dup2()` dans le processus fils
-- Pipes via `execute_pipe()` avec `pipe()`, `fork()` ×2 et `dup2()`
+Dans cette partie, nous avons étendu notre parseur pour détecter les tokens de redirection `>`, `>>` et `<` dans la fonction `parse_line()`. Ces redirections sont ensuite appliquées dans le processus fils grâce à `open()` et `dup2()`. Pour les pipes, nous avons créé la fonction `execute_pipe()` qui utilise `pipe()`, deux `fork()` et `dup2()` pour connecter la sortie du premier processus à l'entrée du second.
 
 **Tests :**
 
@@ -67,10 +59,7 @@ Nous avons développé la boucle principale avec :
 
 ## Partie 4 — Signaux & Background
 
-**✅ Implémenté :**
-- `init_shell()` : `signal(SIG_IGN)` pour ignorer Ctrl-C/Z, `setpgid()` + `tcsetpgrp()` pour isoler le shell
-- Détection de `&` → `launch_job(foreground=0)`
-- Gestion des groupes de processus
+Nous avons initialisé notre shell dans `init_shell()` en ignorant les signaux Ctrl-C et Ctrl-Z via `signal(SIG_IGN)`, et en l'isolant dans son propre groupe de processus avec `setpgid()` et `tcsetpgrp()`. L'exécution en arrière-plan est détectée par la présence du token `&` en fin de ligne, ce qui déclenche `launch_job()` avec le paramètre `foreground=0`.
 
 **Tests :**
 
@@ -85,10 +74,7 @@ Nous avons développé la boucle principale avec :
 
 ## Partie 5 — Job Control
 
-**✅ Implémenté :**
-- Liste chaînée de jobs (`job_t`)
-- `builtin_jobs()`, `builtin_fg()`, `builtin_bg()` avec `kill(SIGCONT)`
-- Nettoyage des zombies via `waitpid(WNOHANG)` dans `update_job_statuses()`
+Nous avons créé une structure de données `job_t` pour maintenir une liste chaînée des jobs actifs. Les commandes `jobs`, `fg` et `bg` sont implémentées respectivement dans `builtin_jobs()`, `builtin_fg()` et `builtin_bg()` en utilisant `kill(SIGCONT)` pour relancer les jobs suspendus et `tcsetpgrp()` pour leur donner le contrôle du terminal. Le nettoyage automatique des processus zombies est assuré par `update_job_statuses()` qui appelle `waitpid(WNOHANG)` en début de chaque itération de la boucle principale.
 
 **Tests :**
 
