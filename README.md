@@ -108,9 +108,14 @@ minishell> bg %1
 [1] sleep 10 &
 ```
 
-> 📸 ![Jobs](screenshots/partie5_jobs.png)
+<img width="630" height="210" alt="image" src="https://github.com/user-attachments/assets/691a859b-1383-4f9a-9afa-388c46864801" />
 
-> 📸 ![fg/bg](screenshots/partie5_fgbg.png)
+<img width="630" height="88" alt="image" src="https://github.com/user-attachments/assets/f8de3cb6-e007-4e5e-95dd-b2e95a151642" />
+<img width="630" height="292" alt="image" src="https://github.com/user-attachments/assets/c0e8a287-953f-4c03-b72c-f5b1fc5f5b91" />
+<img width="630" height="448" alt="image" src="https://github.com/user-attachments/assets/5cf5eb9f-25b9-4a42-af42-47921dfb0a19" />
+
+
+
 
 ---
 
