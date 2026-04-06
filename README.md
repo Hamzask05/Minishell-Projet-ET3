@@ -4,10 +4,10 @@
 ---
 
 
-## Démonstration
 
-[![Mini-Shell Démo]](https://youtu.be/54QgmlK0xfI)---
+## Vidéo Démonstration
 
+**YouTube :** https://youtu.be/54QgmlK0xfI
 
 ## Introduction
 
