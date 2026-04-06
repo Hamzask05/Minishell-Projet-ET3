@@ -1,176 +1,124 @@
-# Mini-shell
+# Mini-Shell — Skali-Serraj — ET3
 
-## Présentation
-Ce projet consiste à implémenter un mini-shell en C capable d’exécuter des commandes Unix simples, de gérer certaines commandes internes, les redirections, les pipes et le contrôle des jobs.
+## Introduction
 
-## Compilation
+Dans le cadre du cours de Système, nous avons implémenté un interpréteur de commandes Unix simplifié en C. Le projet est divisé en 5 parties progressives, allant de la boucle de lecture de commandes jusqu'au contrôle complet des jobs en arrière-plan. Nous avons également ajouté plusieurs fonctionnalités bonus.
+
+**Compilation et exécution :**
 ```bash
 gcc -Wall -o minishell v2.c
+./minishell
 ```
-
-## Fonctionnalités implémentées
-
-### 1. Boucle principale REPL
-- Affichage du prompt.
-- Lecture des commandes utilisateur.
-- Gestion de `exit`.
-- Gestion de `echo`.
-
-### 2. Exécution des commandes
-- Exécution des commandes externes avec `fork` et `execvp`.
-- Attente de la fin du processus fils avec `waitpid`.
-- Gestion des erreurs pour les commandes inexistantes.
-
-### 3. Commandes internes
-- `cd`
-- `jobs`
-- `fg`
-- `bg`
-
-### 4. Redirections
-- Redirection de l’entrée standard.
-- Redirection de la sortie standard.
-- Gestion de l’append.
-
-### 5. Pipes
-- Exécution d’une commande avec un pipe entre deux processus.
-
-### 6. Gestion des jobs
-- Création d’une liste de jobs.
-- Gestion des états `RUNNING`, `STOPPED` et `DONE`.
-- Support du foreground et du background.
-- Gestion des signaux clavier.
-
-## Tests réalisés
-
-### Test 1 : Commande simple
-Commande :
-```bash
-echo hello
-```
-
-Résultat attendu :
-- Affichage de `hello`.
-
-Résultat obtenu :
-- OK
-
-[Ajouter ici une capture d’écran du test 1]
 
 ---
 
-### Test 2 : Changement de répertoire
-Commande :
-```bash
-cd /tmp
-pwd
+## Partie 1 — Boucle REPL
+
+Nous avons implémenté la boucle principale à l'aide de `fgets` pour lire les commandes, `printf` et `fflush` pour afficher le prompt, et `strcspn` pour supprimer le `\n`. Les builtins `exit` et `echo` sont gérés directement dans la boucle avec `strcmp`.
+
+**Tests :**
+```
+minishell> echo bonjour le monde
+bonjour le monde
+minishell> exit
 ```
 
-Résultat attendu :
-- Le répertoire courant devient `/tmp`.
-
-Résultat obtenu :
-- OK
-
-[Ajouter ici une capture d’écran du test 2]
+> 📸 ![Partie 1](screenshots/partie1.png)
 
 ---
 
-### Test 3 : Redirection
-Commande :
-```bash
-ls > out.txt
-cat out.txt
+## Partie 2 — Exécution de commandes
+
+Nous avons implémenté l'exécution des commandes externes à l'aide de `fork`, `execvp` et `waitpid`. Le builtin `cd` est géré sans fork à l'aide de `chdir` car il doit modifier le répertoire du shell lui-même.
+
+**Tests :**
+```
+minishell> ls -l
+minishell> cd /tmp
+minishell> pwd
+/tmp
 ```
 
-Résultat attendu :
-- Le contenu de `ls` est écrit dans `out.txt`.
-
-Résultat obtenu :
-- OK
-
-[Ajouter ici une capture d’écran du test 3]
+> 📸 ![Partie 2](screenshots/partie2.png)
 
 ---
 
-### Test 4 : Pipe
-Commande :
-```bash
-ls | grep .c
+## Partie 3 — Redirections & Pipes
+
+Nous avons implémenté les redirections en détectant les tokens `>`, `>>` et `<` dans `parse_line` et en les appliquant dans le fils à l'aide de `open` et `dup2`. Les pipes sont gérés dans `execute_pipe` à l'aide de `pipe`, `fork` et `dup2` pour connecter la sortie du premier fils à l'entrée du second.
+
+**Tests :**
+```
+minishell> ls -l > /tmp/out.txt
+minishell> cat < /tmp/out.txt
+minishell> echo hello >> /tmp/out.txt
+minishell> ls | grep .c
+minishell> cat /etc/hosts | wc -l
 ```
 
-Résultat attendu :
-- Affichage uniquement des fichiers `.c`.
+> 📸 ![Redirections](screenshots/partie3_redirections.png)
 
-Résultat obtenu :
-- OK
-
-[Ajouter ici une capture d’écran du test 4]
+> 📸 ![Pipes](screenshots/partie3_pipes.png)
 
 ---
 
-### Test 5 : Exécution en background
-Commande :
-```bash
-sleep 5 &
+## Partie 4 — Signaux & Background
+
+Nous avons implémenté la gestion des signaux dans `init_shell` à l'aide de `signal(SIG_IGN)` pour que le shell ignore Ctrl-C et Ctrl-Z, et `setpgid` et `tcsetpgrp` pour isoler le shell dans son propre groupe. Le background est géré en détectant `&` en dernier token et en appelant `launch_job` avec `foreground=0`.
+
+**Tests :**
+```
+minishell> sleep 10      → Ctrl-C : sleep tué, shell continue
+minishell> sleep 10      → Ctrl-Z : sleep suspendu, shell reprend
+minishell> sleep 5 &     → prompt immédiat sans attendre
 ```
 
-Résultat attendu :
-- Le prompt revient immédiatement.
+> 📸 ![Ctrl-C](screenshots/partie4_ctrlc.png)
 
-Résultat obtenu :
-- OK
+> 📸 ![Ctrl-Z](screenshots/partie4_ctrlz.png)
 
-[Ajouter ici une capture d’écran du test 5]
+> 📸 ![Background](screenshots/partie4_background.png)
 
 ---
 
-### Test 6 : Gestion des jobs
-Commande :
-```bash
-jobs
+## Partie 5 — Job Control
+
+Nous avons implémenté une liste chaînée de jobs à l'aide de la struct `job_t`. Les builtins `jobs`, `fg` et `bg` sont gérés respectivement dans `builtin_jobs`, `builtin_fg` et `builtin_bg` à l'aide de `kill(SIGCONT)` et `tcsetpgrp`. Le nettoyage des zombies est effectué à l'aide de `waitpid(WNOHANG)` dans `update_job_statuses` appelée en début de chaque itération.
+
+**Tests :**
+```
+minishell> sleep 30 &
+[1] 1234
+minishell> sleep 20 &
+[2] 1235
+minishell> jobs
+[1] Running  sleep 30
+[2] Running  sleep 20
+minishell> fg %1
+minishell> sleep 10
+^Z
+[1] Stopped  sleep 10
+minishell> bg %1
+[1] sleep 10 &
 ```
 
-Résultat attendu :
-- Affichage des jobs actifs ou suspendus.
+> 📸 ![Jobs](screenshots/partie5_jobs.png)
 
-Résultat obtenu :
-- OK
-
-[Ajouter ici une capture d’écran du test 6]
+> 📸 ![fg/bg](screenshots/partie5_fgbg.png)
 
 ---
 
-### Test 7 : Foreground / background
-Commande :
-```bash
-sleep 10
-```
+## Bonus
 
-Puis :
-- `Ctrl-C`
-- `Ctrl-Z`
-- `bg`
-- `fg`
+Nous avons implémenté un splash screen à l'aide de codes ANSI et `usleep` pour l'animation, une animation `matrix` à l'aide de caractères aléatoires et de codes de couleur ANSI, et un builtin `oasisPops` à l'aide de `system("open ...")` pour ouvrir le portail Polytech.
 
-Résultat attendu :
-- Le shell reste actif.
-- Le job est stoppé puis relancé correctement.
+> 📸 ![Splash screen](screenshots/bonus_splash.png)
 
-Résultat obtenu :
-- OK
+> 📸 ![Matrix](screenshots/bonus_matrix.png)
 
-[Ajouter ici une capture d’écran du test 7]
+---
 
-## Bonus éventuels
-- Splash screen au démarrage.
-- Commande personnalisée supplémentaire.
-- Toute autre fonctionnalité non demandée mais ajoutée au projet.
+## Bugs connus
 
-## Bugs connus / limites
-- [À compléter si besoin]
-- [À compléter si besoin]
-
-## Auteurs
-- Nom 1
-- Nom 2
+- Les pipes multiples ne sont pas supportés (`cmd1 | cmd2 | cmd3`)
+- Les redirections dans les pipes ne sont pas supportées (`ls | grep .c > out.txt`)
