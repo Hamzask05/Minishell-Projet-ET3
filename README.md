@@ -4,7 +4,7 @@
 
 ## Introduction
 
-Dans le cadre du cours de **Système d'exploitations**, nous avons implémenté un **mini-shell** en C, c'est-à-dire un interpréteur de commandes Unix simplifié qui reproduit les principaux comportements d'un terminal classique : affichage d'un prompt, lecture des commandes utilisateur, lancement des processus, et gestion de leur exécution.
+Dans le cadre du cours de **Systèmes d'Exploitations**, nous avons implémenté un **mini-shell** en C, c'est-à-dire un interpréteur de commandes Unix simplifié qui reproduit les principaux comportements d'un terminal classique : affichage d'un prompt, lecture des commandes utilisateur, lancement des processus, et gestion de leur exécution.
 
 Le projet est structuré en **5 parties progressives**, allant de la boucle de lecture des commandes (`REPL`) jusqu'au contrôle complet des jobs en arrière-plan.
 
