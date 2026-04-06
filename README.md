@@ -1,8 +1,14 @@
-# Mini-Shell — Skali-Serraj — ET3
+# Mini-Shell — SERRAJ Mehdi-SKALI Hamza — ET3
+<img width="688" height="299" alt="Mini-Shell - Projet Polytech ET3" src="https://github.com/user-attachments/assets/882bcc0b-7509-448f-9f72-9fb3e27bcad9" />
+
 
 ## Introduction
 
-Dans le cadre du cours de Système, nous avons implémenté un interpréteur de commandes Unix simplifié en C. Le projet est divisé en 5 parties progressives, allant de la boucle de lecture de commandes jusqu'au contrôle complet des jobs en arrière-plan. Nous avons également ajouté plusieurs fonctionnalités bonus.
+Dans le cadre du cours de Système, nous avons implémenté un interpréteur de commandes Unix simplifié en C, c’est-à-dire un programme capable d’interpréter et d’exécuter des commandes Unix de manière interactive, à la manière d’un terminal simplifié. L’idée était de reproduire les principaux comportements d’un shell classique : affichage d’un prompt, lecture des commandes saisies par l’utilisateur, lancement des processus, et gestion de leur exécution.
+
+Le projet est divisé en 5 parties progressives, allant de la boucle de lecture de commandes jusqu'au contrôle complet des jobs en arrière-plan. 
+
+Nous avons par ailleurs implémenté quelques fonctionnalités bonus afin de mieux comprendre les mécanismes du shell, mais aussi pour créer d'éventuels raccourcis qui pourraient être intéressants dans un contexte d'utilisation quotidienne.
 
 **Compilation et exécution :**
 ```bash
@@ -17,13 +23,9 @@ gcc -Wall -o minishell v2.c
 Nous avons implémenté la boucle principale à l'aide de `fgets` pour lire les commandes, `printf` et `fflush` pour afficher le prompt, et `strcspn` pour supprimer le `\n`. Les builtins `exit` et `echo` sont gérés directement dans la boucle avec `strcmp`.
 
 **Tests :**
-```
-minishell> echo bonjour le monde
-bonjour le monde
-minishell> exit
-```
 
-> 📸 ![Partie 1](screenshots/partie1.png)
+
+<img width="1105" height="147" alt="Pasted Graphic 3" src="https://github.com/user-attachments/assets/e59324f2-9d69-4593-98e8-20ddc60a03ec" />
 
 ---
 
@@ -32,14 +34,13 @@ minishell> exit
 Nous avons implémenté l'exécution des commandes externes à l'aide de `fork`, `execvp` et `waitpid`. Le builtin `cd` est géré sans fork à l'aide de `chdir` car il doit modifier le répertoire du shell lui-même.
 
 **Tests :**
-```
-minishell> ls -l
-minishell> cd /tmp
-minishell> pwd
-/tmp
-```
 
-> 📸 ![Partie 2](screenshots/partie2.png)
+
+Partie 2.a
+<img width="1329" height="425" alt="Pasted Graphic 4" src="https://github.com/user-attachments/assets/f8a62e96-2eed-4bed-b281-e1af51c4fcfd" />
+Partie 2.b
+<img width="674" height="277" alt="minishell pwd" src="https://github.com/user-attachments/assets/f0e2d1d1-3b10-463c-9955-9f9ce4c3625f" />
+
 
 ---
 
@@ -56,9 +57,13 @@ minishell> ls | grep .c
 minishell> cat /etc/hosts | wc -l
 ```
 
-> 📸 ![Redirections](screenshots/partie3_redirections.png)
+Partie 3.a
+<img width="813" height="300" alt="total 360" src="https://github.com/user-attachments/assets/c32b8e9a-4727-48d9-ad7f-4e74f85bea28" />
+Hostname n’existe pas sur Mac, on essaie alors avec hosts:
+<img width="819" height="252" alt="# Host Database" src="https://github.com/user-attachments/assets/1fe2dd39-d288-43de-853f-c4155ff27b6e" />
 
-> 📸 ![Pipes](screenshots/partie3_pipes.png)
+Partie 3.b
+<img width="489" height="181" alt="minishell c" src="https://github.com/user-attachments/assets/21f01f1f-5c06-47df-a5c1-86e5befd38e6" />
 
 ---
 
@@ -72,12 +77,13 @@ minishell> sleep 10      → Ctrl-C : sleep tué, shell continue
 minishell> sleep 10      → Ctrl-Z : sleep suspendu, shell reprend
 minishell> sleep 5 &     → prompt immédiat sans attendre
 ```
+Partie 4.b
+<img width="204" height="62" alt="minishell" src="https://github.com/user-attachments/assets/b60cf966-8a20-4a2d-ad0b-5b69a542673e" />
 
-> 📸 ![Ctrl-C](screenshots/partie4_ctrlc.png)
+Partie 4.c
+<img width="203" height="42" alt="minishell sleep 10" src="https://github.com/user-attachments/assets/8694f389-f91c-4a4c-8a8e-df75fe0292cd" />
+<img width="229" height="43" alt="minishell sleep 10" src="https://github.com/user-attachments/assets/e39b82a6-6e2d-4de6-9b65-2fd9ebc73d65" />
 
-> 📸 ![Ctrl-Z](screenshots/partie4_ctrlz.png)
-
-> 📸 ![Background](screenshots/partie4_background.png)
 
 ---
 
